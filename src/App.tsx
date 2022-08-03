@@ -1,10 +1,11 @@
 import AppRouter from './router/AppRouter';
+import { AppTheme } from './theme';
 
 const App = () => {
   return (
-    <div>
+    <AppTheme>
       <AppRouter />
-    </div>
+    </AppTheme>
   );
 };
 
