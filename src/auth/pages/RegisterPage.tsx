@@ -2,7 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Grid, Link, TextField } from '@mui/material';
 import { AuthLayout } from '../layout';
 
-export const RegisterView = () => {
+export const RegisterPage = () => {
   return (
     <AuthLayout title="Register">
       <form>
@@ -47,4 +47,4 @@ export const RegisterView = () => {
   );
 };
 
-export default RegisterView;
+export default RegisterPage;

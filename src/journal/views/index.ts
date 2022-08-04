@@ -1,1 +1,2 @@
-export * from './JournalView';
+export * from './NothingSelectedView';
+export * from './NoteView';

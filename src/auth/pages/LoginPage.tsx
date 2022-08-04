@@ -4,7 +4,7 @@ import { Button, Grid, Link, TextField, Typography } from '@mui/material';
 
 import { AuthLayout } from '../layout';
 
-export const LoginView = () => {
+export const LoginPage = () => {
   return (
     <AuthLayout title="Login">
       <form>
@@ -50,4 +50,4 @@ export const LoginView = () => {
   );
 };
 
-export default LoginView;
+export default LoginPage;
