@@ -1,26 +1,87 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FocusEvent, useEffect, useMemo, useState } from 'react';
 
-export const useForm = <T>(initialForm: T = {} as T) => {
+export type FormValidation<T> = { [key in keyof T]: [(...args: any[]) => boolean, string] };
+type FormResult<T> = { [key in keyof T as `${string & key}Valid`]: string | null };
+type FormVerify<T> = { [key in keyof T]: boolean };
 
-    const [formState, setFormState] = useState<T>(initialForm);
+export const useForm =
+    <T, U extends keyof T = keyof T>(
+        initialForm: T,
+        formValidations?: FormValidation<T>
+    ) => {
 
-    const onInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = target;
+        const [formState, setFormState] = useState<T>(initialForm);
+        const [formValidation, setFormValidation] = useState<FormResult<T>>({} as FormResult<T>);
+        const [touched, setTouched] = useState<FormVerify<T>>({} as FormVerify<T>);
 
-        setFormState({
+        const isFormValid = useMemo(() => {
+            for (const formValue of Object.keys(formValidation)) {
+                if (formValidation[formValue as keyof FormResult<T>] !== null) return false;
+            }
+
+            return true;
+
+        }, [formValidation]);
+
+        useEffect(() => {
+            createValidators();
+
+        }, [formState]);
+
+        const onInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+            const { name, value } = target;
+            setFormState({
+                ...formState,
+                [name]: value
+            });
+        };
+
+        const onBlur = (e: FocusEvent<HTMLInputElement>) => {
+            const { name } = e.target;
+            setTouched({
+                ...touched,
+                [name]: true
+            });
+        };
+
+        const checkAllTouched = () => {
+            let result: FormVerify<T> = {} as FormVerify<T>;
+            if (formState) {
+                for (const iterator of Object.keys(formState)) {
+                    result = {
+                        ...result,
+                        [iterator]: true
+                    };
+                }
+                setTouched(result);
+            }
+        };
+
+        const onResetForm = () => {
+            setFormState(initialForm);
+        };
+
+        const createValidators = () => {
+            const formCheckValues: any = {};
+            if (formValidations) {
+                for (const formField of Object.keys(formValidations)) {
+                    let newProp: U = formField as U;
+                    const [fn, errorMessage] = formValidations[newProp];
+                    formCheckValues[`${formField}Valid`] = fn(formState[newProp]) ? null : errorMessage;
+                }
+                setFormValidation(formCheckValues);
+            }
+        };
+
+        return {
             ...formState,
-            [name]: value
-        });
+            ...formValidation,
+            touched,
+            checkAllTouched,
+            isFormValid,
+            formState,
+            onInputChange,
+            onResetForm,
+            onBlur
+        };
     };
-
-    const onResetForm = () => {
-        setFormState(initialForm);
-    };
-
-    return {
-        ...formState,
-        formState,
-        onInputChange,
-        onResetForm,
-    };
-};
