@@ -9,6 +9,7 @@ export const NoteView = () => {
             sx={{ mb: 1 }}
             alignItems="center"
             justifyContent="space-between"
+            className="animate__animated animate__fadeIn animate__faster"
         >
             <Grid item>
                 <Typography

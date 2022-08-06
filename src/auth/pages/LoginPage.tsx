@@ -19,8 +19,8 @@ export const LoginPage = () => {
 
   const isAuthenticate = useMemo(() => status === "checking", [status]);
   const { email, password, onInputChange } = useForm<Authenticate>({
-    email: 'David@gmail.com',
-    password: '123456'
+    email: '',
+    password: ''
   });
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -37,7 +37,10 @@ export const LoginPage = () => {
 
   return (
     <AuthLayout title="Login">
-      <form onSubmit={onSubmit}>
+      <form
+        onSubmit={onSubmit}
+        className="animate__animated animate__fadeIn animate__faster"
+      >
         <Grid container spacing={2}>
           <Grid item xs={12} display={!!error ? '' : 'none'}>
             <Alert severity='error'>

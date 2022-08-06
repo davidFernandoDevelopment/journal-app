@@ -113,3 +113,7 @@ export const signInEmailPassword = async ({
         };
     }
 };
+
+export const logoutFirebase = async () => {
+    return await FirebaseAuth.signOut();
+};

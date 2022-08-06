@@ -14,6 +14,7 @@ import {
     useTheme,
     useMediaQuery,
 } from '@mui/material';
+import { useAppSelector } from '../../store';
 
 
 
@@ -25,7 +26,7 @@ export const Sidebar = ({ drawerWidth }: Props) => {
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.only('xs'));
-
+    const { user } = useAppSelector(state => state.auth);
 
     return (
         <Box
@@ -49,7 +50,9 @@ export const Sidebar = ({ drawerWidth }: Props) => {
                 }}
             >
                 <Toolbar>
-                    <Typography variant="h6" component="div">David</Typography>
+                    <Typography variant="h6" component="div">
+                        {user?.displayName}
+                    </Typography>
                 </Toolbar>
                 <Divider />
                 <List>
