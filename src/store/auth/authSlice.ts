@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Error } from '../../firebase/providers';
 
-
+export type Status = 'checking' | 'not-authenticated' | 'authenticated';
 export interface User {
     uid: string | null;
     email: string | null;
@@ -9,7 +9,7 @@ export interface User {
     photoURL?: string | null;
 }
 interface State {
-    status: 'checking' | 'not-authenticated' | 'authenticated';
+    status: Status;
     user: User | null;
     error: Error | null;
 }
