@@ -1,8 +1,11 @@
 import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 
-import { FirebaseAuth } from '../firebase/config';
-import { login, logout, Status, useAppDispatch, useAppSelector } from '../store';
+import { FirebaseAuth } from '../firebase';
+import { login, logout, Status } from '../store';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { startLoadingNotes } from '../store/journal/thunks';
+
 
 export const useChecking = (): Status => {
     const dispatch = useAppDispatch();
@@ -18,6 +21,7 @@ export const useChecking = (): Status => {
                 photoURL: user?.photoURL,
                 displayName: user?.displayName,
             }));
+            dispatch(startLoadingNotes());
         });
     }, [dispatch]);
 

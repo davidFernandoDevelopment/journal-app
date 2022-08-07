@@ -1,8 +1,46 @@
+import { useMemo, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import 'sweetalert2/dist/sweetalert2.css';
+
 import { SaveOutlined } from '@mui/icons-material';
 import { Button, Grid, TextField, Typography } from '@mui/material';
+
 import { ImageGallery, itemData } from '../components';
+import { startSaveNote } from '../../store';
+import { useAppDispatch, useAppSelector, useForm } from '../../hooks';
 
 export const NoteView = () => {
+
+    const dispatch = useAppDispatch();
+    const {
+        isSaving,
+        activeNote,
+        messageSaved,
+    } = useAppSelector(state => state.journal);
+    const {
+        body,
+        date,
+        title,
+        formState,
+        onInputChange
+    } = useForm(activeNote);
+
+    const dateString = useMemo(() => {
+        const newDate = new Date(date).toUTCString();
+        return newDate;
+    }, [date]);
+
+    const onSaveNote = () => {
+        if (formState) dispatch(startSaveNote(formState));
+    };
+
+    useEffect(() => {
+        if (messageSaved) {
+            Swal.fire('Nota actualizada', messageSaved, 'success');
+        }
+    }, [messageSaved]);
+
+
     return (
         <Grid
             container
@@ -16,12 +54,14 @@ export const NoteView = () => {
                     fontSize={39}
                     fontWeight="light"
                 >
-                    28 de agosto, 2023
+                    {dateString}
                 </Typography>
             </Grid>
             <Grid item>
                 <Button
                     color="primary"
+                    disabled={isSaving}
+                    onClick={onSaveNote}
                 >
                     <SaveOutlined
                         sx={{
@@ -43,6 +83,9 @@ export const NoteView = () => {
                         border: "none",
                         mb: 1
                     }}
+                    name="title"
+                    value={title}
+                    onChange={onInputChange}
                 />
                 <TextField
                     type="text"
@@ -55,6 +98,9 @@ export const NoteView = () => {
                         border: "none",
                         mb: 1
                     }}
+                    name="body"
+                    value={body}
+                    onChange={onInputChange}
                 />
             </Grid>
             <ImageGallery data={itemData} />

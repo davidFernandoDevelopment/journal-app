@@ -1,7 +1,8 @@
 import { LogoutOutlined, MenuOutlined } from '@mui/icons-material';
 import { AppBar, Grid, IconButton, Toolbar, Typography } from '@mui/material';
 
-import { startLogout, useAppDispatch } from '../../store';
+import { startLogout } from '../../store';
+import { useAppDispatch } from '../../hooks';
 
 interface Props {
     drawerWidth: number;

@@ -6,28 +6,19 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
 } from 'firebase/auth';
-import { FirebaseAuth } from './config';
 
-import { Authenticate } from '../auth/interfaces';
-import { User } from '../store/auth/authSlice';
+import { Authenticate } from '../auth';
+import { Response, FirebaseAuth } from './';
 
 
 const googleProvider = new GoogleAuthProvider();
 
 
-export interface Error {
-    code: number;
-    message: string;
-}
-interface Response {
-    ok: boolean;
-    result: User | Error;
-}
 
 export const signInWithGoogle = async (): Promise<Response> => {
     try {
         const result = await signInWithPopup(FirebaseAuth, googleProvider);
-        // const credentials = GoogleAuthProvider.credentialFromResult(result);
+        
         const {
             uid,
             email,

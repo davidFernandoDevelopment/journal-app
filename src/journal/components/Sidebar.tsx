@@ -1,20 +1,16 @@
-import { TurnedInNot } from '@mui/icons-material';
 import {
     Box,
     List,
     Drawer,
     Toolbar,
     Divider,
-    ListItem,
     Typography,
-    ListItemIcon,
-    ListItemButton,
-    Grid,
-    ListItemText,
     useTheme,
     useMediaQuery,
 } from '@mui/material';
-import { useAppSelector } from '../../store';
+
+import { SidebarItem } from './';
+import { useAppSelector } from '../../hooks';
 
 
 
@@ -26,7 +22,10 @@ export const Sidebar = ({ drawerWidth }: Props) => {
 
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.only('xs'));
-    const { user } = useAppSelector(state => state.auth);
+    const {
+        auth: { user },
+        journal: { notes }
+    } = useAppSelector(state => state);
 
     return (
         <Box
@@ -57,20 +56,11 @@ export const Sidebar = ({ drawerWidth }: Props) => {
                 <Divider />
                 <List>
                     {
-                        Array.from({ length: 4 }).map((_, i) => (
-                            <ListItem key={i} disablePadding>
-                                <ListItemButton>
-                                    <ListItemIcon>
-                                        <TurnedInNot />
-                                    </ListItemIcon>
-                                    <Grid container>
-                                        <ListItemText
-                                            primary='Productos'
-                                            secondary='Example products'
-                                        />
-                                    </Grid>
-                                </ListItemButton>
-                            </ListItem>
+                        notes.map(note => (
+                            <SidebarItem
+                                key={note.id}
+                                {...note}
+                            />
                         ))
                     }
                 </List>

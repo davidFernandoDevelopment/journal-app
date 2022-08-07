@@ -1,13 +1,13 @@
+import { FormEvent, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Alert, Button, Grid, Link, TextField } from '@mui/material';
 
-import { AuthLayout } from '../layout';
-import { useForm, FormValidation } from '../../hooks';
 
-import { FormEvent, useMemo } from 'react';
+import { AuthLayout } from '../layout';
 import { Authenticate } from '../interfaces';
-import { useAppDispatch, useAppSelector } from '../../store';
-import { startCreatingUserWithEmailPassword } from '../../store/auth/thunks';
+import { startCreatingUserWithEmailPassword } from '../../store';
+import { useForm, FormValidation, useAppDispatch, useAppSelector, } from '../../hooks';
+
 
 
 const formValidation: FormValidation<Authenticate> = {
@@ -16,6 +16,11 @@ const formValidation: FormValidation<Authenticate> = {
   displayName: [(value: string) => value.length >= 1, 'EL nombre es obligatorio']
 };
 
+const formData: Authenticate = {
+  email: '',
+  password: '',
+  displayName: '',
+};
 
 export const RegisterPage = () => {
   const dispatch = useAppDispatch();
@@ -34,11 +39,7 @@ export const RegisterPage = () => {
     emailValid,
     passwordValid,
     displayNameValid
-  } = useForm<Authenticate>({
-    email: '',
-    password: '',
-    displayName: '',
-  }, formValidation);
+  } = useForm<Authenticate>(formData, formValidation);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

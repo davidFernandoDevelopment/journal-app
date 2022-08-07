@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { AuthRoutes } from '../auth';
 import { CheckingAuth } from '../ui';
 import { JournalRoutes } from '../journal';
-import { useChecking } from '../hooks/useChecking';
+import { useChecking } from '../hooks';
 
 
 

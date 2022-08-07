@@ -4,22 +4,22 @@ import {
     signInEmailPassword,
     registerEmailPassword,
     logoutFirebase,
-} from '../../firebase/providers';
+} from '../../firebase';
 
-import { Authenticate } from '../../auth/interfaces';
-import { AppDispatch } from '../store';
+import { Authenticate } from '../../auth';
 
 import { checkingCredentials, logout, login, User } from './';
+import { AppThunk } from '../';
 
 
-export const checkingAuthentication = () => {
-    return async (dispatch: AppDispatch) => {
+export const checkingAuthentication = (): AppThunk => {
+    return async (dispatch) => {
         dispatch(checkingCredentials());
     };
 };
 
-export const startGoogleSign = () => {
-    return async (dispatch: AppDispatch) => {
+export const startGoogleSign = (): AppThunk => {
+    return async (dispatch) => {
         dispatch(checkingCredentials());
         const { ok, result } = await signInWithGoogle();
         if (!ok) return dispatch(logout(result as Error));
@@ -28,8 +28,8 @@ export const startGoogleSign = () => {
     };
 };
 
-export const startCreatingUserWithEmailPassword = (user: Authenticate) => {
-    return async (dispatch: AppDispatch) => {
+export const startCreatingUserWithEmailPassword = (user: Authenticate): AppThunk => {
+    return async (dispatch) => {
         dispatch(checkingCredentials());
 
         const { ok, result } = await registerEmailPassword(user);
@@ -39,8 +39,8 @@ export const startCreatingUserWithEmailPassword = (user: Authenticate) => {
     };
 };
 
-export const startLoginWithEmailPassword = (credentials: Authenticate) => {
-    return async (dispatch: AppDispatch) => {
+export const startLoginWithEmailPassword = (credentials: Authenticate): AppThunk => {
+    return async (dispatch) => {
         dispatch(checkingCredentials());
 
         const { ok, result } = await signInEmailPassword(credentials);
@@ -50,8 +50,8 @@ export const startLoginWithEmailPassword = (credentials: Authenticate) => {
     };
 };
 
-export const startLogout = () => {
-    return async (dispatch: AppDispatch) => {
+export const startLogout = (): AppThunk => {
+    return async (dispatch) => {
         await logoutFirebase();
 
         dispatch(logout());

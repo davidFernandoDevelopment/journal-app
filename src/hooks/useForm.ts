@@ -25,8 +25,12 @@ export const useForm =
 
         useEffect(() => {
             createValidators();
-
+            //eslint-disable-next-line
         }, [formState]);
+
+        useEffect(() => {
+            setFormState(initialForm);
+        }, [initialForm]);
 
         const onInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
             const { name, value } = target;

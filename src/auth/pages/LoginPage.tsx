@@ -1,16 +1,19 @@
 import { FormEvent, useMemo } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { Google } from '@mui/icons-material';
+import { Link as RouterLink } from 'react-router-dom';
 import { Alert, Button, Grid, Link, TextField, Typography } from '@mui/material';
 
+
 import { AuthLayout } from '../layout';
-import { useForm } from '../../hooks';
 import { Authenticate } from '../interfaces';
+import { useForm, useAppDispatch, useAppSelector, } from '../../hooks';
+import { startGoogleSign, startLoginWithEmailPassword } from '../../store';
 
-import { useAppDispatch, useAppSelector } from '../../store';
-import { startGoogleSign, startLoginWithEmailPassword } from '../../store/auth';
 
-
+const formData:Authenticate = {
+  email: '',
+  password: ''
+};
 
 export const LoginPage = () => {
 
@@ -18,10 +21,7 @@ export const LoginPage = () => {
   const { status, error } = useAppSelector(state => state.auth);
 
   const isAuthenticate = useMemo(() => status === "checking", [status]);
-  const { email, password, onInputChange } = useForm<Authenticate>({
-    email: '',
-    password: ''
-  });
+  const { email, password, onInputChange } = useForm<Authenticate>(formData);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
