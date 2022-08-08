@@ -1,16 +1,16 @@
-import { useMemo, useEffect } from 'react';
+import { useRef, useMemo, useEffect, ChangeEvent } from 'react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.css';
 
-import { SaveOutlined } from '@mui/icons-material';
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { SaveOutlined, Upload } from '@mui/icons-material';
+import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 
 import { ImageGallery, itemData } from '../components';
-import { startSaveNote } from '../../store';
+import { startSaveNote, startUploadFiles } from '../../store';
 import { useAppDispatch, useAppSelector, useForm } from '../../hooks';
 
 export const NoteView = () => {
-
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const dispatch = useAppDispatch();
     const {
         isSaving,
@@ -30,16 +30,26 @@ export const NoteView = () => {
         return newDate;
     }, [date]);
 
-    const onSaveNote = () => {
-        if (formState) dispatch(startSaveNote(formState));
-    };
-
     useEffect(() => {
         if (messageSaved) {
             Swal.fire('Nota actualizada', messageSaved, 'success');
         }
     }, [messageSaved]);
 
+    const onSaveNote = () => {
+        if (formState) dispatch(startSaveNote(formState));
+    };
+
+    const onFileInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+        if (!target.files) return;
+        if (!target.files.length) return;
+
+        dispatch(startUploadFiles(target.files));
+    };
+
+    const onSelectImages = () => {
+        inputRef.current?.click();
+    };
 
     return (
         <Grid
@@ -58,6 +68,20 @@ export const NoteView = () => {
                 </Typography>
             </Grid>
             <Grid item>
+                <input
+                    style={{ display: 'none' }}
+                    ref={inputRef}
+                    type="file"
+                    multiple
+                    onChange={onFileInputChange}
+                />
+                <IconButton
+                    color="primary"
+                    disabled={isSaving}
+                    onClick={onSelectImages}
+                >
+                    <Upload />
+                </IconButton>
                 <Button
                     color="primary"
                     disabled={isSaving}

@@ -2,10 +2,11 @@ import { doc, collection, setDoc } from 'firebase/firestore/lite';
 
 import {
     Note, AppThunk, setNotes, setSaving, updateNote,
-    setActiveNote, addNewEmptyNote, savingNewNote
+    setActiveNote, addNewEmptyNote, savingNewNote,
+    setPhotosToActiveNote
 } from '../';
-import { loadNotes } from '../../helpers';
 import { FirebaseDB } from '../../firebase';
+import { fileUpload, loadNotes } from '../../helpers';
 
 
 export const startNewNote = (): AppThunk => {
@@ -51,5 +52,18 @@ export const startSaveNote = (note: Note): AppThunk => {
 
         await setDoc(docRef, noteToFirestore, { merge: true });
         dispatch(updateNote(note));
+    };
+};
+
+export const startUploadFiles = (files: FileList): AppThunk => {
+    return async (dispatch) => {
+        dispatch(setSaving());
+        const fileUploadPromises: Promise<string>[] = [];
+        Array.from(files).forEach(file => {
+            fileUploadPromises.push(fileUpload(file));
+        });
+        const photosUrls = await Promise.all(fileUploadPromises);
+
+        dispatch(setPhotosToActiveNote(photosUrls));
     };
 };
