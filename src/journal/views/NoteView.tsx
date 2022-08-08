@@ -2,12 +2,13 @@ import { useRef, useMemo, useEffect, ChangeEvent } from 'react';
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.css';
 
-import { SaveOutlined, Upload } from '@mui/icons-material';
+import { DeleteOutline, SaveOutlined, Upload } from '@mui/icons-material';
 import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 
-import { ImageGallery, itemData } from '../components';
-import { startSaveNote, startUploadFiles } from '../../store';
+import { ImageGallery } from '../components';
 import { useAppDispatch, useAppSelector, useForm } from '../../hooks';
+import { startSaveNote, startUploadFiles, startDeletingNote } from '../../store';
+
 
 export const NoteView = () => {
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -49,6 +50,10 @@ export const NoteView = () => {
 
     const onSelectImages = () => {
         inputRef.current?.click();
+    };
+
+    const onDelete = () => {
+        dispatch(startDeletingNote());
     };
 
     return (
@@ -127,7 +132,17 @@ export const NoteView = () => {
                     onChange={onInputChange}
                 />
             </Grid>
-            <ImageGallery data={itemData} />
+            <Grid item container>
+                <Button
+                    onClick={onDelete}
+                    sx={{ mt: 2 }}
+                    color="error"
+                >
+                    <DeleteOutline />
+                    Borrar
+                </Button>
+            </Grid>
+            <ImageGallery images={activeNote!.imageUrls} />
         </Grid>
     );
 };

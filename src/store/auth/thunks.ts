@@ -7,8 +7,8 @@ import {
 } from '../../firebase';
 
 import { Authenticate } from '../../auth';
-
 import { checkingCredentials, logout, login, User } from './';
+import { clearNotesLogout } from '../journal';
 import { AppThunk } from '../';
 
 
@@ -55,5 +55,6 @@ export const startLogout = (): AppThunk => {
         await logoutFirebase();
 
         dispatch(logout());
+        dispatch(clearNotesLogout());
     };
 };
